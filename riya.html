@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Product Catalogue</title>
+</head>
+<body class="bg-gray-100 p-6">
+    <div class="max-w-6xl mx-auto">
+        <!-- Search & Filters -->
+        <div class="flex flex-col lg:flex-row gap-6 mb-8">
+            <input id="search" type="text" placeholder="Search products..." 
+                   class="p-3 border rounded-lg w-full lg:w-80 focus:outline-none focus:ring-2">
+            <div class="flex gap-2">
+                <button onclick="sortByPrice('asc')" class="px-4 py-2 bg-blue-500 text-white rounded">Price Low</button>
+                <button onclick="sortByPrice('desc')" class="px-4 py-2 bg-blue-500 text-white rounded">Price High</button>
+            </div>
+        </div>
+        
+        <!-- Categories & Products -->
+        <div class="flex flex-col lg:flex-row gap-6">
+            <div class="lg:w-48 space-y-2">
+                <h3 class="font-bold">Categories</h3>
+                <label><input type="checkbox" class="cat" value="electronics" onchange="filterProducts()"> Electronics</label>
+                <label><input type="checkbox" class="cat" value="clothing" onchange="filterProducts()"> Clothing</label>
+            </div>
+            <div id="products" class="grid grid-cols-1 md:grid-cols-3 gap-6 flex-1"></div>
+        </div>
+    </div>
+
+    <script>
+        const products = [
+            {id:1, name:'Laptop', category:'electronics', price:50000, img:'https://via.placeholder.com/300'},
+            {id:2, name:'T-Shirt', category:'clothing', price:500, img:'https://via.placeholder.com/300'},
+            {id:3, name:'Phone', category:'electronics', price:20000, img:'https://via.placeholder.com/300'},
+            {id:4, name:'Jeans', category:'clothing', price:1500, img:'https://via.placeholder.com/300'}
+        ];
+
+        function renderProducts(prods) {
+            const container = document.getElementById('products');
+            container.innerHTML = prods.map(p => `
+                <div class="bg-white p-4 rounded-lg shadow-lg hover:shadow-xl transition">
+                    <img src="${p.img}" alt="${p.name}" class="w-full h-48 object-cover rounded">
+                    <h3 class="font-bold mt-2">${p.name}</h3>
+                    <p class="text-green-600 font-bold">₹${p.price}</p>
+                </div>
+            `).join('');
+        }
+
+        function filterProducts() {
+            const search = document.getElementById('search').value.toLowerCase();
+            const cats = Array.from(document.querySelectorAll('.cat:checked')).map(cb => cb.value);
+            let filtered = products.filter(p => 
+                (!cats.length || cats.includes(p.category)) &&
+                p.name.toLowerCase().includes(search)
+            );
+            renderProducts(filtered);
+        }
+
+        function sortByPrice(dir) {
+            const filtered = document.querySelectorAll('#products > div');
+            const prods = Array.from(filtered).map(el => ({
+                el, price: parseInt(el.querySelector('p').textContent.replace('₹', ''))
+            }));
+            prods.sort((a,b) => dir === 'asc' ? a.price - b.price : b.price - a.price);
+            document.getElementById('products').innerHTML = prods.map(({el}) => el.outerHTML).join('');
+        }
+
+        document.getElementById('search').addEventListener('input', filterProducts);
+        renderProducts(products); // Initial render
+    </script>
+</body>
+</html>

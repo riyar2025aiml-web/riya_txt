@@ -1,0 +1,9 @@
+- [x] Implement struct Patient with id, name[50], doctor[50], date[12], issue[100]
+- [x] Define array of Patient structs (max 100)
+- [x] Implement AddPatient function: prompt for details, assign ID, add to array
+- [x] Implement SearchPatient function: search by ID, display details
+- [x] Implement ListAppointments function: display all patients' appointment details
+- [x] Implement SaveToFile function: write all patients to patients.dat
+- [x] Implement LoadFromFile function: read from patients.dat on start
+- [x] Implement main menu for user interaction
+- [x] Compile with gcc and test the program
